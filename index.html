@@ -418,7 +418,7 @@ footer a{color:var(--yellow)}
         <li data-i18n="pas4.6"><span class="cat events">Esdeveniments</span> <span class="q">quan la bandera es cliqui</span>, i sota <span class="cat motion">Moviment</span> <span class="q">ves a x: y:</span>: <span class="q">130</span> a la y i, a la x, <span class="cat operators">Operadors</span> <span class="q">nombre a l'atzar entre 1 i 10</span> amb <span class="q">-200</span> i <span class="q">200</span>, igual que al Paper. Així el maó torna a dalt de seguida.</li>
         <li data-i18n="pas4.7">Afegeix <span class="cat control">Control</span> <span class="q">espera 1 segons</span> i canvia l'1 per <span class="q">3</span>. Així el primer maó triga a caure.</li>
         <li data-i18n="pas4.8">Afegeix <span class="cat control">Control</span> <span class="q">per sempre</span> i, a dins, <span class="cat motion">Moviment</span> <span class="q">suma 10 a y</span> amb <span class="q">-4</span> en lloc del 10.</li>
-        <li data-i18n="pas4.9">Dins, un <span class="cat control">Control</span> <span class="q">si … llavors</span> amb <span class="cat sensing">Sensors</span> <span class="q">tocant Professor?</span>. A dins hi van tres blocs: <span class="cat sound">So</span> <span class="q">inicia el so ai</span>, <span class="cat looks">Aspecte</span> <span class="q">canvia el fons a fi</span> i <span class="cat control">Control</span> <span class="q">atura tot</span>.</li>
+        <li data-i18n="pas4.9">Dins, un <span class="cat control">Control</span> <span class="q">si … llavors</span> amb <span class="cat sensing">Sensors</span> <span class="q">tocant Professor?</span>. A dins hi van tres blocs, en aquest ordre: <span class="cat looks">Aspecte</span> <span class="q">canvia el fons a fi</span>, <span class="cat sound">So</span> <span class="q">toca el so ai fins que acabi</span> i <span class="cat control">Control</span> <span class="q">atura tot</span>.</li>
         <li data-i18n="pas4.10">Sota, el mateix que al Paper: <span class="cat control">Control</span> <span class="q">si … llavors</span> amb <span class="cat operators">Operadors</span> <span class="q">… &lt; …</span>, <span class="cat motion">Moviment</span> <span class="q">posició y</span> al primer forat i <span class="q">-150</span> al segon, i a dins una còpia del <span class="q">ves a x: y: 130</span>. Així el maó torna a caure.</li>
         <li data-i18n="pas4.11">Torna al <span class="sprite-pick" style="margin:0;padding:2px 8px 2px 4px"><img src="professor.png" alt="" style="height:24px">Professor</span> i afegeix <span class="cat looks">Aspecte</span> <span class="q">canvia el fons a</span> (tria <span class="q">carrer</span>) just sota <span class="q">quan la bandera es cliqui</span>. Així la partida nova comença al carrer.</li>
       </ol>
@@ -450,34 +450,34 @@ footer a{color:var(--yellow)}
     </div>
   </div>
   <div class="panel-body">
-    <p class="goal" data-i18n="pas5.3">Objectiu: que el paper caigui més de pressa a mesura que sumes punts.</p>
+    <p class="goal" data-i18n="pas5.3">Objectiu: que el maó caigui més de pressa a mesura que sumes punts.</p>
     <div>
-      <div class="sprite-pick" data-i18n="pas5.4"><img src="paper.png" alt="">Selecciona: Paper</div><span class="role" data-i18n="pas5.24">Canvieu: B llegeix · A fa els blocs</span>
+      <div class="sprite-pick" data-i18n="pas5.4"><img src="mao.png" alt="">Selecciona: Maó</div><span class="role" data-i18n="pas5.24">Canvieu: B llegeix · A fa els blocs</span>
       <h3 data-i18n="pas5.5">Què has de fer</h3>
       <ol class="do">
-        <li data-i18n="pas5.6"><span class="cat operators">Operadors</span> Arrossega un bloc <span class="q">… - …</span> al forat del <span class="q">suma -3 a y</span>.</li>
-        <li data-i18n="pas5.7">Al primer forat de la resta, escriu <span class="q">-3</span>.</li>
+        <li data-i18n="pas5.6"><span class="cat operators">Operadors</span> Arrossega un bloc <span class="q">… - …</span> al forat del <span class="q">suma -4 a y</span>.</li>
+        <li data-i18n="pas5.7">Al primer forat de la resta, escriu <span class="q">-4</span>.</li>
         <li data-i18n="pas5.8"><span class="cat operators">Operadors</span> Al segon forat, posa un bloc <span class="q">… / …</span> (divisió).</li>
         <li data-i18n="pas5.9"><span class="cat variables">Variables</span> Arrossega <span class="q">Punts</span> al primer forat de la divisió i escriu <span class="q">5</span> al segon.</li>
       </ol>
-      <p style="margin:14px 0 0" data-i18n="pas5.10">Ara el paper baixa <span class="q">3 + Punts ÷ 5</span> passos cada vegada. Com més punts, més ràpid.</p>
+      <p style="margin:14px 0 0" data-i18n="pas5.10">Ara el maó baixa <span class="q">4 + Punts ÷ 5</span> passos cada vegada. Com més punts, més ràpid.</p>
       <div class="scroll-x" style="margin-top:12px">
         <table class="t">
           <thead><tr><th data-i18n="pas5.11">Punts</th><th data-i18n="pas5.12">Passos que baixa</th></tr></thead>
           <tbody>
-            <tr><td data-i18n="pas5.13">0</td><td data-i18n="pas5.14">3</td></tr>
-            <tr><td data-i18n="pas5.15">10</td><td data-i18n="pas5.16">5</td></tr>
-            <tr><td data-i18n="pas5.17">25</td><td data-i18n="pas5.18">8</td></tr>
-            <tr><td data-i18n="pas5.19">50</td><td data-i18n="pas5.20">13</td></tr>
+            <tr><td data-i18n="pas5.13">0</td><td data-i18n="pas5.14">4</td></tr>
+            <tr><td data-i18n="pas5.15">10</td><td data-i18n="pas5.16">6</td></tr>
+            <tr><td data-i18n="pas5.17">25</td><td data-i18n="pas5.18">9</td></tr>
+            <tr><td data-i18n="pas5.19">50</td><td data-i18n="pas5.20">14</td></tr>
           </tbody>
         </table>
       </div>
     </div>
     <div class="col-right">
-      <div class="code-box"><p class="cap" data-i18n="pas5.21">El bloc de moviment del Paper, ara amb operacions</p><div data-script="paper5"></div></div>
+      <div class="code-box"><p class="cap" data-i18n="pas5.21">El bloc de moviment del Maó, ara amb operacions</p><div data-script="mao5"></div></div>
       <div class="check">
         <h3 data-i18n="pas5.22">Comprova</h3>
-        <p data-i18n="pas5.23">Juga un parell de minuts. Notes que al principi és tranquil i després s'accelera?</p>
+        <p data-i18n="pas5.23">Juga un parell de minuts. Notes que al principi és tranquil i després els maons cauen cada cop més de pressa?</p>
         <button class="btn" type="button" data-done="5" aria-pressed="false">Ho tinc</button>
       </div>
     </div>
@@ -574,12 +574,12 @@ footer a{color:var(--yellow)}
   var B = {
     ca:{flag:['quan la','es cliqui'], go:['ves a x:','y:'], forever:'per sempre', ifA:'si', ifB:'llavors', key:['tecla','premuda?'],
         right:'fletxa dreta', left:'fletxa esquerra', change:['suma','a x','a y'], rnd:["nombre a l'atzar entre",'i'], ypos:'posició y',
-        touch:['tocant','?'], set:['assigna a','el valor'], inc:function(v,n){return ['augmenta',v,'en',n];}, sound:'inicia el so',
+        touch:['tocant','?'], set:['assigna a','el valor'], inc:function(v,n){return ['augmenta',v,'en',n];}, sound:'inicia el so', untilA:'toca el so', untilB:'fins que acabi',
         wait:['espera','segons'], bg:'canvia el fons a', stop:'atura', all:'tot',
         g4:'… el bucle «per sempre» continua igual …', g5:'… dins del bucle «per sempre» …'},
     es:{flag:['al hacer clic en',''], go:['ir a x:','y:'], forever:'por siempre', ifA:'si', ifB:'entonces', key:['¿tecla','presionada?'],
         right:'flecha derecha', left:'flecha izquierda', change:['sumar','a x','a y'], rnd:['número aleatorio entre','y'], ypos:'posición en y',
-        touch:['¿tocando','?'], set:['dar a','el valor'], inc:function(v,n){return ['sumar a',v,n];}, sound:'iniciar sonido',
+        touch:['¿tocando','?'], set:['dar a','el valor'], inc:function(v,n){return ['sumar a',v,n];}, sound:'iniciar sonido', untilA:'tocar sonido', untilB:'hasta que termine',
         wait:['esperar','segundos'], bg:'cambiar fondo a', stop:'detener', all:'todos',
         g4:'… el bucle «por siempre» sigue igual …', g5:'… dentro del bucle «por siempre» …'}
   };
@@ -642,8 +642,8 @@ footer a{color:var(--yellow)}
         forever(stack(
           change(inp('-4'),'y'),
           ifBlk(tocaProf(), stack(
-            blk('sound',[L.sound,dd('ai')]),
             blk('looks',[L.bg,dd('fi')]),
+            blk('sound',[L.untilA,dd('ai'),L.untilB]),
             blk('control',[L.stop,dd(L.all)])
           )),
           ifBlk(yBaix(), stack(respawn()))
@@ -655,9 +655,9 @@ footer a{color:var(--yellow)}
         gotoXY(inp('0'),inp('-110')),
         ghost(L.g4)
       ),
-      paper5: stack(
+      mao5: stack(
         ghost(L.g5),
-        change(rep('operators',[inp('-3'),'-',rep('operators',[rep('variables',['Punts']),'/',inp('5')])]),'y',1)
+        change(rep('operators',[inp('-4'),'-',rep('operators',[rep('variables',['Punts']),'/',inp('5')])]),'y',1)
       )
     };
   }
