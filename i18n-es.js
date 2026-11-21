@@ -3,7 +3,7 @@
 window.I18N_ES = {
  "hero.1": "VIDEOJUEGO EN 45 MINUTOS",
  "hero.2": "¡Recoge los papeles!",
- "hero.3": "Un profesor de Lleida pasea por la calle y las academias le tiran los papeles por la ventana. Recógelos todos, pero cuidado: a veces, en lugar de un papel, cae un ladrillo.",
+ "hero.3": "El profesor Javier, de Lleida, quiere que los alumnos de su curso de docencia hagan las prácticas en las academias de la calle. Las que están de acuerdo le lanzan por la ventana el acuerdo de colaboración firmado. Recoge todos los papeles, pero cuidado: las academias que no quieren colaborar intentan asustarlo tirándole ladrillos.",
  "hero.4": "Tú programarás el juego, paso a paso, con Scratch. No hace falta saber programar.",
  "hero.5": "5 pasos",
  "hero.6": "Sin instalar nada",
