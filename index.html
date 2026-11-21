@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recull els papers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+/* Món arcade de 8 bits: fons blau nit, targetes crema amb ombra dura, blocs de Scratch dibuixats en CSS.
+   Disposició: capçalera amb escenari, barra de passos enganxada, un panell per pas (instruccions | programa + resultat). */
+:root{
+  --ink:#1d2b53;
+  --night:#14203f;
+  --cream:#fff6ec;
+  --sky:#29adff;
+  --red:#ff004d;
+  --yellow:#ffec27;
+  --muted:#4c5679;
+  --line:#1d2b53;
+  --display:'Press Start 2P','Courier New',monospace;
+  --body:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;
+  /* colors dels blocs de Scratch */
+  --motion:#4c97ff; --motion-d:#3373cc;
+  --looks:#9966ff;  --looks-d:#774dcb;
+  --sound:#cf63cf;  --sound-d:#bd42bd;
+  --events:#ffbf00; --events-d:#cc9900;
+  --control:#ffab19;--control-d:#cf8b17;
+  --sensing:#5cb1d6;--sensing-d:#2e8eb8;
+  --operators:#59c059;--operators-d:#389438;
+  --variables:#ff8c1a;--variables-d:#db6e00;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{margin:0;background:var(--night);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55}
+img{max-width:100%}
+a{color:var(--ink)}
+:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+
+/* ---------- capçalera ---------- */
+header.hero{padding:28px 0 36px;background:linear-gradient(var(--night),var(--ink))}
+.hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:28px;align-items:center}
+.eyebrow{font-family:var(--display);font-size:11px;color:var(--yellow);letter-spacing:.04em;margin:0 0 14px}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(26px,5vw,44px);line-height:1.25;color:#fff;margin:0 0 18px;text-wrap:balance;text-shadow:4px 4px 0 var(--red)}
+.hero p.lead{color:#e9eefc;font-size:19px;margin:0 0 18px;max-width:34em}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.hero-tags li{background:var(--yellow);color:var(--ink);font-weight:800;font-size:14px;padding:5px 11px;border:3px solid var(--ink);box-shadow:3px 3px 0 #000}
+
+/* ---------- escenari (miniatura del joc) ---------- */
+.stage{position:relative;width:100%;aspect-ratio:4/3;background:#000 center/100% 100% no-repeat;border:4px solid var(--ink);box-shadow:6px 6px 0 #000;overflow:hidden}
+.stage .it{position:absolute;transform:translate(-50%,-50%)}
+.stage .lbl{position:absolute;transform:translate(-50%,-50%);font-family:var(--display);font-size:clamp(9px,1.6vw,13px);color:var(--yellow);text-shadow:2px 2px 0 #000;white-space:nowrap}
+.stage .monitor{position:absolute;left:2.5%;top:3%;display:flex;align-items:center;gap:6px;background:#e6f0ff;border:1px solid #b9c8e6;border-radius:4px;padding:2px 5px;font:700 12px/1.2 system-ui,sans-serif;color:#575e75}
+.stage .monitor b{background:var(--variables);color:#fff;border-radius:3px;padding:1px 8px;min-width:28px;text-align:center}
+.stage-cap{font-size:14px;color:var(--muted);margin:8px 0 0;text-align:center}
+.hero .stage-cap{color:#bcc6e6}
+
+/* ---------- navegació de passos ---------- */
+nav.steps{position:sticky;top:0;z-index:10;background:var(--night);border-top:4px solid var(--ink);border-bottom:4px solid var(--ink)}
+nav.steps .wrap{display:flex;align-items:center;gap:10px;padding-top:10px;padding-bottom:10px;overflow-x:auto}
+nav.steps a{flex:0 0 auto;display:flex;align-items:center;gap:8px;text-decoration:none;color:#fff;font-weight:800;font-size:14px;padding:6px 12px;border:3px solid #4a5a8f;background:var(--ink)}
+nav.steps a .n{font-family:var(--display);font-size:11px;color:var(--yellow)}
+nav.steps a.done{border-color:var(--lime,#00e436);background:#0b3d2a}
+nav.steps a.done .n::after{content:" ✔";color:#00e436}
+nav.steps a:hover{border-color:var(--yellow)}
+.progress{margin-left:auto;flex:0 0 auto;font-weight:800;font-size:14px;color:var(--yellow);white-space:nowrap}
+.langs{flex:0 0 auto;display:flex;gap:6px}
+.langs button{display:block;padding:0;width:36px;height:26px;border:3px solid #4a5a8f;background:none;cursor:pointer;opacity:.55}
+.langs button svg{display:block;width:100%;height:100%}
+.langs button:hover{opacity:.9;border-color:var(--yellow)}
+.langs button[aria-pressed="true"]{opacity:1;border-color:var(--yellow)}
+
+/* ---------- panells ---------- */
+main{padding:32px 0 60px}
+section.panel{background:var(--cream);border:4px solid var(--ink);box-shadow:8px 8px 0 #000;margin:0 0 36px;position:relative}
+.panel-head{display:flex;align-items:center;gap:16px;padding:16px 20px;background:var(--sky);border-bottom:4px solid var(--ink)}
+.badge{flex:0 0 auto;font-family:var(--display);font-size:20px;background:var(--yellow);color:var(--ink);width:54px;height:54px;display:grid;place-items:center;border:4px solid var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.panel-head h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(14px,2.4vw,19px);line-height:1.4;color:var(--ink);text-wrap:balance}
+.panel-head .concept{margin:4px 0 0;font-size:15px;font-weight:700;color:var(--ink)}
+.panel-body{padding:22px 20px 24px;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:26px}
+.panel-body.single{grid-template-columns:minmax(0,1fr)}
+.goal{grid-column:1/-1;margin:0;font-size:19px;font-weight:700}
+h3{font-family:var(--display);font-weight:400;font-size:12px;line-height:1.5;margin:0 0 12px;color:var(--red);text-transform:uppercase}
+ol.do{margin:0;padding:0;list-style:none;counter-reset:s;display:grid;gap:12px}
+ol.do li{counter-increment:s;position:relative;padding-left:42px}
+ol.do li::before{content:counter(s);position:absolute;left:0;top:-1px;width:30px;height:30px;display:grid;place-items:center;background:var(--ink);color:#fff;font-family:var(--display);font-size:11px}
+.cat{display:inline-block;color:#fff;font-weight:800;font-size:14px;padding:0 9px;border-radius:4px;line-height:1.55}
+.cat.events{background:var(--events-d)} .cat.motion{background:var(--motion-d)} .cat.looks{background:var(--looks-d)}
+.cat.sound{background:var(--sound-d)} .cat.control{background:var(--control-d)} .cat.sensing{background:var(--sensing-d)}
+.cat.operators{background:var(--operators-d)} .cat.variables{background:var(--variables-d)}
+.q{font-weight:800}
+.tip{margin:14px 0 0;padding:10px 12px;background:#fff;border:3px dashed var(--ink);font-size:16px}
+.tip strong{color:var(--red)}
+.sprite-pick{display:inline-flex;align-items:center;gap:10px;background:#fff;border:3px solid var(--ink);padding:5px 12px 5px 8px;font-weight:800;margin:0 0 14px;box-shadow:3px 3px 0 var(--ink)}
+.role{display:table;margin:-4px 0 14px 0;padding:5px 10px;background:var(--yellow);border:3px solid var(--ink);font-weight:800;font-size:14px;vertical-align:top}
+.sprite-pick img{height:34px;width:auto;background:#e6eefc;border:1px solid #b9c8e6;padding:2px}
+.col-right{display:grid;gap:18px;align-content:start}
+.code-box{background:#fff;border:3px solid var(--ink);padding:14px 14px 18px;overflow-x:auto;background-image:radial-gradient(#d7deef 1px,transparent 1px);background-size:14px 14px}
+.code-box .cap{font-weight:800;font-size:14px;color:var(--muted);margin:0 0 10px}
+.check{background:#e9ffe9;border:3px solid #008751;padding:12px 14px}
+.check h3{color:#006b40;margin-bottom:8px}
+.check p{margin:0 0 10px}
+.btn{font-family:var(--body);font-weight:800;font-size:16px;cursor:pointer;padding:9px 16px;border:3px solid var(--ink);background:var(--yellow);color:var(--ink);box-shadow:3px 3px 0 var(--ink);border-radius:0}
+.btn:hover{background:#fff27a}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn[aria-pressed="true"]{background:#00e436}
+.btn.big{font-size:18px;padding:12px 20px}
+details{margin:14px 0 0;background:#fff;border:3px solid var(--ink)}
+summary{cursor:pointer;font-weight:800;padding:8px 12px}
+details ul{margin:0;padding:0 14px 12px 32px}
+details li{margin:4px 0}
+.result-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:820px){
+  .hero-grid,.panel-body,.result-pair{grid-template-columns:minmax(0,1fr)}
+  .panel-head{padding:14px}
+  .panel-body{padding:18px 14px 20px}
+  .badge{width:46px;height:46px;font-size:16px}
+}
+
+/* ---------- blocs de Scratch ---------- */
+.stack{display:flex;flex-direction:column;align-items:flex-start;width:max-content;min-width:0}
+.blk{display:inline-flex;align-items:center;gap:7px;flex-wrap:nowrap;white-space:nowrap;background:var(--c);border:1px solid var(--cd);color:#fff;font:700 13px/1 system-ui,'Segoe UI',sans-serif;padding:7px 9px;min-height:36px;border-radius:4px;margin-top:-1px}
+.stack>.blk:first-child,.arm>.stack>.blk:first-child{margin-top:0}
+.blk.hat{border-radius:22px 22px 4px 4px;padding-top:12px;min-height:44px}
+.cblk{display:flex;flex-direction:column;align-items:flex-start;margin-top:-1px}
+.cblk>.ctop{border-radius:4px 4px 4px 0;margin-top:0;position:relative}
+.cblk>.arm{border-left:16px solid var(--c);padding:0;min-height:16px;min-width:140px}
+.cblk>.cbot{border-radius:0 0 4px 4px;min-height:20px;width:100%;padding:0;margin-top:0}
+.cblk.new,.blk.new{outline:3px solid var(--red);outline-offset:2px;position:relative;z-index:1}
+.new-tag{font-family:var(--display);font-size:8px;background:var(--red);color:#fff;padding:3px 5px;margin-left:6px;vertical-align:middle}
+.events{--c:var(--events);--cd:var(--events-d)} .motion{--c:var(--motion);--cd:var(--motion-d)}
+.looks{--c:var(--looks);--cd:var(--looks-d)} .sound{--c:var(--sound);--cd:var(--sound-d)}
+.control{--c:var(--control);--cd:var(--control-d)} .sensing{--c:var(--sensing);--cd:var(--sensing-d)}
+.operators{--c:var(--operators);--cd:var(--operators-d)} .variables{--c:var(--variables);--cd:var(--variables-d)}
+.in{background:#fff;color:#575e75;border-radius:14px;padding:3px 9px;min-width:22px;text-align:center;font-weight:700}
+.dd{background:rgba(0,0,0,.18);color:#fff;border-radius:4px;padding:3px 7px;font-weight:700}
+.rep{display:inline-flex;align-items:center;gap:6px;background:var(--c);border:1px solid var(--cd);color:#fff;border-radius:14px;padding:3px 9px;font-weight:700}
+.bool{display:inline-flex;align-items:center;gap:6px;background:var(--c);border:1px solid var(--cd);color:#fff;padding:3px 14px;font-weight:700;clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 50%,calc(100% - 10px) 100%,10px 100%,0 50%);border-radius:0}
+.bool .in{padding:1px 7px}
+.flag{width:15px;height:15px;display:block}
+.ghost{margin-top:6px;padding:8px 10px;border:2px dashed #9aa6cc;color:var(--muted);font:600 13px system-ui,sans-serif;background:rgba(255,255,255,.6);width:max-content;max-width:100%;white-space:normal}
+
+/* ---------- altres peces ---------- */
+.ui-map{width:100%;height:auto;display:block;border:3px solid var(--ink);background:#fff}
+.dl-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:6px}
+.note{font-size:15px;color:var(--muted);margin:6px 0 0}
+table.t{width:100%;border-collapse:collapse;font-size:16px;background:#fff}
+table.t th,table.t td{border:3px solid var(--ink);padding:8px 10px;text-align:left;vertical-align:top}
+table.t th{background:var(--ink);color:#fff;font-weight:800}
+.scroll-x{overflow-x:auto}
+.challenges{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;padding:22px 20px 24px}
+.challenge{background:#fff;border:3px solid var(--ink);padding:12px 14px;box-shadow:4px 4px 0 var(--ink)}
+.challenge h4{margin:0 0 6px;font-size:17px}
+.challenge p{margin:0;font-size:16px}
+.challenge .lvl{font-family:var(--display);font-size:9px;color:var(--red);display:block;margin-bottom:8px}
+.pad{padding:22px 20px 24px}
+.pad p{margin:0 0 12px;max-width:62ch}
+footer{padding:0 0 50px;color:#bcc6e6;font-size:14px}
+footer p{margin:6px 0;max-width:70ch}
+footer a{color:var(--yellow)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow" data-i18n="hero.1">VIDEOJOC EN 45 MINUTS</p>
+      <h1 data-i18n="hero.2">Recull els papers!</h1>
+      <p class="lead" data-i18n="hero.3">Un professor de Lleida passeja pel carrer i les acadèmies li tiren els papers per la finestra. Recull-los tots, però vigila: de vegades en comptes d'un paper cau un maó.</p>
+      <p class="lead" data-i18n="hero.4">Tu programaràs el joc, pas a pas, amb Scratch. No cal saber programar.</p>
+      <ul class="hero-tags">
+        <li data-i18n="hero.5">5 passos</li>
+        <li data-i18n="hero.6">Sense instal·lar res</li>
+        <li data-i18n="hero.7">Sense codi: arrossegues blocs</li>
+      </ul>
+    </div>
+    <div>
+      <div class="stage" id="hero-stage" data-bg="fons-carrer.png" role="img" aria-label="El joc acabat: un professor calb recull papers que cauen de les finestres d'un carrer amb acadèmies"></div>
+      <p class="stage-cap" data-i18n="hero.8">Així et quedarà el joc quan acabis.</p>
+    </div>
+  </div>
+</header>
+
+<nav class="steps" aria-label="Passos de l'activitat">
+  <div class="wrap">
+    <a href="#pas0" data-step="0" data-i18n="nav.1"><span class="n">0</span> Prepara</a>
+    <a href="#pas1" data-step="1" data-i18n="nav.2"><span class="n">1</span> Moure</a>
+    <a href="#pas2" data-step="2" data-i18n="nav.3"><span class="n">2</span> Papers</a>
+    <a href="#pas3" data-step="3" data-i18n="nav.4"><span class="n">3</span> Punts</a>
+    <a href="#pas4" data-step="4" data-i18n="nav.5"><span class="n">4</span> Maó</a>
+    <a href="#pas5" data-step="5" data-i18n="nav.6"><span class="n">5</span> Dificultat</a>
+    <span class="progress" id="progress" aria-live="polite">0 de 6 fets</span>
+    <span class="langs">
+      <button type="button" data-lang="ca" title="Català" aria-label="Català" aria-pressed="true"><svg viewBox="0 0 9 6" preserveAspectRatio="none"><rect width="9" height="6" fill="#fcdd09"/><g fill="#da121a"><rect y=".667" width="9" height=".667"/><rect y="2" width="9" height=".667"/><rect y="3.333" width="9" height=".667"/><rect y="4.667" width="9" height=".667"/></g></svg></button>
+      <button type="button" data-lang="es" title="Español" aria-label="Español" aria-pressed="false"><svg viewBox="0 0 3 2" preserveAspectRatio="none"><rect width="3" height="2" fill="#aa151b"/><rect y=".5" width="3" height="1" fill="#f1bf00"/></svg></button>
+    </span>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ================= PAS 0 ================= -->
+<section class="panel" id="pas0">
+  <div class="panel-head">
+    <div class="badge">0</div>
+    <div>
+      <h2 data-i18n="pas0.1">Prepara l'escenari</h2>
+      <p class="concept" data-i18n="pas0.2">Obre Scratch i carrega el projecte base</p>
+    </div>
+  </div>
+  <div class="panel-body">
+    <p class="goal" data-i18n="pas0.3">Objectiu: tenir Scratch obert en català amb el professor, un paper i un maó a punt.</p>
+    <div>
+      <h3 data-i18n="pas0.4">Què has de fer</h3>
+      <ol class="do">
+        <li data-i18n="pas0.5">Obre <a href="https://scratch.mit.edu/projects/editor/" target="_blank" rel="noopener">scratch.mit.edu/projects/editor</a>. No cal crear cap compte.</li>
+        <li data-i18n="pas0.6">Canvia l'idioma: a dalt a l'esquerra, clica <span class="q">Settings</span> (la roda dentada) &rarr; <span class="q">Language</span> i baixa per la llista fins a <span class="q">Català</span>. Si ja surt en castellà o en català, el menú es diu <span class="q">Configuración</span> o <span class="q">Configuració</span> &rarr; <span class="q">Idioma</span>.</li>
+        <li data-i18n="pas0.7">Menú <span class="q">Fitxer</span> &rarr; <span class="q">Carrega des del teu ordinador</span> i tria el fitxer <span class="q">projecte-base.sb3</span>. Si surt un avís, accepta.</li>
+        <li data-i18n="pas0.8">Mira l'esquema: has de reconèixer les quatre zones de la pantalla.</li>
+        <li data-i18n="pas0.18">Treballeu en parella: <span class="q">A</span> llegeix les instruccions en veu alta i <span class="q">B</span> posa els blocs a Scratch. Quan canvieu de personatge, canvieu de paper.</li>
+      </ol>
+      <div class="tip"><span data-i18n="pas0.9"><strong>On és el fitxer?</strong> Al Classroom, a l'apartat de materials. Si no el veus, descarrega'l aquí:</span>
+        <div class="dl-row">
+          <button class="btn" id="dl" type="button" hidden>Descarrega projecte-base.zip</button>
+        </div>
+        <p class="note" id="dl-note" hidden></p>
+        <p class="note" id="dl-fallback" data-i18n="pas0.10">Demana el fitxer al professor o agafa'l del Classroom.</p>
+      </div>
+    </div>
+    <div class="col-right">
+      <svg class="ui-map" viewBox="0 0 620 360" role="img" aria-label="Esquema de l'editor de Scratch amb quatre zones numerades">
+        <rect x="0" y="0" width="620" height="34" fill="#855cd6"/>
+        <text x="14" y="22" fill="#fff" font-family="system-ui,sans-serif" font-size="14" font-weight="700" data-i18n="pas0.11">⚙ Settings ▾ &nbsp;&nbsp; Fitxer ▾ &nbsp;&nbsp; Edita ▾</text>
+        <rect x="0" y="34" width="70" height="326" fill="#f2f6ff" stroke="#c8d3ee"/>
+        <circle cx="35" cy="62" r="9" fill="#4c97ff"/><circle cx="35" cy="94" r="9" fill="#9966ff"/><circle cx="35" cy="126" r="9" fill="#cf63cf"/><circle cx="35" cy="158" r="9" fill="#ffbf00"/><circle cx="35" cy="190" r="9" fill="#ffab19"/><circle cx="35" cy="222" r="9" fill="#5cb1d6"/><circle cx="35" cy="254" r="9" fill="#59c059"/><circle cx="35" cy="286" r="9" fill="#ff8c1a"/>
+        <rect x="70" y="34" width="150" height="326" fill="#fff" stroke="#c8d3ee"/>
+        <rect x="84" y="56" width="110" height="26" rx="4" fill="#4c97ff"/><rect x="84" y="94" width="110" height="26" rx="4" fill="#4c97ff"/><rect x="84" y="132" width="110" height="26" rx="4" fill="#4c97ff"/><rect x="84" y="170" width="110" height="26" rx="4" fill="#4c97ff"/>
+        <rect x="220" y="34" width="190" height="326" fill="#f9f9ff" stroke="#c8d3ee"/>
+        <rect x="236" y="70" width="120" height="26" rx="4" fill="#ffbf00"/><rect x="236" y="100" width="100" height="26" rx="4" fill="#4c97ff"/>
+        <rect x="410" y="34" width="210" height="160" fill="#000"/>
+        <text x="415" y="48" fill="#fff" font-size="12" font-family="system-ui,sans-serif">▶ 🚩 &nbsp;■</text>
+        <rect x="410" y="194" width="210" height="166" fill="#e9eefc" stroke="#c8d3ee"/>
+        <rect x="422" y="206" width="48" height="48" fill="#fff" stroke="#855cd6" stroke-width="3"/><rect x="478" y="206" width="48" height="48" fill="#fff" stroke="#c8d3ee"/><rect x="534" y="206" width="48" height="48" fill="#fff" stroke="#c8d3ee"/>
+        <text x="425" y="270" fill="#575e75" font-size="11" font-family="system-ui,sans-serif">Professor</text><text x="482" y="270" fill="#575e75" font-size="11" font-family="system-ui,sans-serif">Paper</text><text x="545" y="270" fill="#575e75" font-size="11" font-family="system-ui,sans-serif">Maó</text>
+        <g font-family="system-ui,sans-serif" font-weight="800" font-size="13">
+          <circle cx="145" cy="262" r="15" fill="#ff004d"/><text x="145" y="267" fill="#fff" text-anchor="middle">1</text>
+          <circle cx="315" cy="190" r="15" fill="#ff004d"/><text x="315" y="195" fill="#fff" text-anchor="middle">2</text>
+          <circle cx="515" cy="120" r="15" fill="#ff004d"/><text x="515" y="125" fill="#fff" text-anchor="middle">3</text>
+          <circle cx="515" cy="318" r="15" fill="#ff004d"/><text x="515" y="323" fill="#fff" text-anchor="middle">4</text>
+        </g>
+      </svg>
+      <ul style="margin:0;padding-left:20px">
+        <li data-i18n="pas0.12"><strong>1 · Blocs:</strong> les peces, ordenades per colors.</li>
+        <li data-i18n="pas0.13"><strong>2 · Zona de codi:</strong> aquí hi arrossegues i enganxes els blocs.</li>
+        <li data-i18n="pas0.14"><strong>3 · Escenari:</strong> on es veu el joc. La bandera verda l'engega.</li>
+        <li data-i18n="pas0.15"><strong>4 · Personatges:</strong> Professor, Paper i Maó. Clica'n un per programar-lo.</li>
+      </ul>
+      <div class="check">
+        <h3 data-i18n="pas0.16">Comprova</h3>
+        <p data-i18n="pas0.17">Veus el carrer amb tres edificis, el professor a baix, un paper i un maó a dalt?</p>
+        <button class="btn" type="button" data-done="0" aria-pressed="false">Ho tinc</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PAS 1 ================= -->
+<section class="panel" id="pas1">
+  <div class="panel-head">
+    <div class="badge">1</div>
+    <div>
+      <h2 data-i18n="pas1.1">El professor es mou</h2>
+      <p class="concept" data-i18n="pas1.2">Esdeveniments, bucles i condicions</p>
+    </div>
+  </div>
+  <div class="panel-body">
+    <p class="goal" data-i18n="pas1.3">Objectiu: moure el professor a l'esquerra i a la dreta amb les fletxes del teclat.</p>
+    <div>
+      <div class="sprite-pick" data-i18n="pas1.4"><img src="professor.png" alt="">Selecciona: Professor</div><span class="role" data-i18n="pas1.21">A llegeix · B fa els blocs</span>
+      <h3 data-i18n="pas1.5">Què has de fer</h3>
+      <ol class="do">
+        <li data-i18n="pas1.6"><span class="cat events">Esdeveniments</span> Arrossega <span class="q">quan la bandera es cliqui</span> a la zona de codi. Tot programa comença amb un esdeveniment.</li>
+        <li data-i18n="pas1.7"><span class="cat motion">Moviment</span> Enganxa a sota <span class="q">ves a x: y:</span>. Escriu <span class="q">0</span> a la x i <span class="q">-110</span> a la y. Així sempre comença al mig.</li>
+        <li data-i18n="pas1.8"><span class="cat control">Control</span> Afegeix <span class="q">per sempre</span>. El que hi posis a dins es repeteix sense parar.</li>
+        <li data-i18n="pas1.9"><span class="cat control">Control</span> Dins del bucle, posa un <span class="q">si … llavors</span>.</li>
+        <li data-i18n="pas1.10"><span class="cat sensing">Sensors</span> Arrossega <span class="q">tecla … premuda?</span> al forat del <span class="q">si</span>. Al desplegable, tria <span class="q">fletxa dreta</span>.</li>
+        <li data-i18n="pas1.11"><span class="cat motion">Moviment</span> Dins del <span class="q">si</span>, posa <span class="q">suma 10 a x</span> i canvia el 10 per <span class="q">8</span>.</li>
+        <li data-i18n="pas1.12">Clic dret sobre el <span class="q">si</span> &rarr; <span class="q">Duplica</span>. Enganxa'l a sota i canvia-hi <span class="q">fletxa esquerra</span> i <span class="q">-8</span>.</li>
+      </ol>
+      <details>
+        <summary data-i18n="pas1.13">Si no et funciona</summary>
+        <ul>
+          <li data-i18n="pas1.14">Comprova que has seleccionat el Professor, no el Paper.</li>
+          <li data-i18n="pas1.15">Els dos <span class="q">si</span> han d'estar dins del <span class="q">per sempre</span>.</li>
+          <li data-i18n="pas1.16">Per anar a l'esquerra, el número ha de portar el signe menys: <span class="q">-8</span>.</li>
+        </ul>
+      </details>
+    </div>
+    <div class="col-right">
+      <div class="code-box"><p class="cap" data-i18n="pas1.17">El teu programa del Professor</p><div data-script="prof1"></div></div>
+      <div>
+        <div data-stage="step1"></div>
+        <p class="stage-cap" data-i18n="pas1.18">Resultat esperat: el professor es mou a banda i banda.</p>
+      </div>
+      <div class="check">
+        <h3 data-i18n="pas1.19">Comprova</h3>
+        <p data-i18n="pas1.20">Clica la bandera verda i prem les fletxes. Es mou cap als dos costats?</p>
+        <button class="btn" type="button" data-done="1" aria-pressed="false">Ho tinc</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PAS 2 ================= -->
+<section class="panel" id="pas2">
+  <div class="panel-head">
+    <div class="badge">2</div>
+    <div>
+      <h2 data-i18n="pas2.1">Cauen papers de les finestres</h2>
+      <p class="concept" data-i18n="pas2.2">Moviment continu i posicions a l'atzar</p>
+    </div>
+  </div>
+  <div class="panel-body">
+    <p class="goal" data-i18n="pas2.3">Objectiu: que el paper surti d'una finestra, caigui fins a baix i torni a començar.</p>
+    <div>
+      <div class="sprite-pick" data-i18n="pas2.4"><img src="paper.png" alt="">Selecciona: Paper</div><span class="role" data-i18n="pas2.17">Canvieu: B llegeix · A fa els blocs</span>
+      <h3 data-i18n="pas2.5">Què has de fer</h3>
+      <ol class="do">
+        <li data-i18n="pas2.6"><span class="cat events">Esdeveniments</span> <span class="q">quan la bandera es cliqui</span>.</li>
+        <li data-i18n="pas2.7"><span class="cat motion">Moviment</span> <span class="q">ves a x: y:</span>. Escriu <span class="q">130</span> a la y. A la x, arrossega-hi <span class="cat operators">Operadors</span> (els blocs verds) <span class="q">nombre a l'atzar entre 1 i 10</span> i canvia l'1 per <span class="q">-200</span> i el 10 per <span class="q">200</span>.</li>
+        <li data-i18n="pas2.8"><span class="cat control">Control</span> <span class="q">per sempre</span>.</li>
+        <li data-i18n="pas2.9"><span class="cat motion">Moviment</span> Dins: <span class="q">suma 10 a y</span> i canvia el 10 per <span class="q">-3</span>. El paper baixa 3 passos cada vegada.</li>
+        <li data-i18n="pas2.10"><span class="cat control">Control</span> Sota, un <span class="q">si … llavors</span>. Com a condició: <span class="cat operators">Operadors</span> <span class="q">… &lt; …</span>, amb <span class="cat motion">Moviment</span> <span class="q">posició y</span> al primer forat i <span class="q">-150</span> al segon.</li>
+        <li data-i18n="pas2.11">Dins del <span class="q">si</span>, posa una còpia del <span class="q">ves a x: y: 130</span> (clic dret &rarr; Duplica). Quan arriba a baix, torna a sortir d'una finestra.</li>
+      </ol>
+      <div class="tip" data-i18n="pas2.12"><strong>Truc:</strong> per fer-lo més lent o més ràpid, canvia el <span class="q">-3</span>. Com més gran és el número, més ràpid cau.</div>
+    </div>
+    <div class="col-right">
+      <div class="code-box"><p class="cap" data-i18n="pas2.13">El teu programa del Paper</p><div data-script="paper2"></div></div>
+      <div>
+        <div data-stage="step2"></div>
+        <p class="stage-cap" data-i18n="pas2.14">Resultat esperat: el paper cau i, quan arriba a baix, torna a sortir de dalt.</p>
+      </div>
+      <div class="check">
+        <h3 data-i18n="pas2.15">Comprova</h3>
+        <p data-i18n="pas2.16">Clica la bandera verda. El paper cau una vegada i una altra des de llocs diferents?</p>
+        <button class="btn" type="button" data-done="2" aria-pressed="false">Ho tinc</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PAS 3 ================= -->
+<section class="panel" id="pas3">
+  <div class="panel-head">
+    <div class="badge">3</div>
+    <div>
+      <h2 data-i18n="pas3.1">Recull papers i suma punts</h2>
+      <p class="concept" data-i18n="pas3.2">Variables, condicions i so</p>
+    </div>
+  </div>
+  <div class="panel-body">
+    <p class="goal" data-i18n="pas3.3">Objectiu: cada paper que agafi el professor suma un punt i fa un so.</p>
+    <div>
+      <div class="sprite-pick" data-i18n="pas3.4"><img src="paper.png" alt="">Segueix al Paper</div>
+      <h3 data-i18n="pas3.5">Què has de fer</h3>
+      <ol class="do">
+        <li data-i18n="pas3.6"><span class="cat variables">Variables</span> Clica <span class="q">Crea una variable</span>. Posa-hi el nom <span class="q">Punts</span> i marca <span class="q">Per a tots els personatges</span>. Veuràs el marcador a l'escenari.</li>
+        <li data-i18n="pas3.7"><span class="cat variables">Variables</span> Enganxa <span class="q">assigna a … el valor 0</span> just sota <span class="q">quan la bandera es cliqui</span> i, al desplegable, tria <span class="q">Punts</span>. Així cada partida comença a zero.</li>
+        <li data-i18n="pas3.8"><span class="cat control">Control</span> Dins del <span class="q">per sempre</span>, sota <span class="q">suma -3 a y</span>, posa un altre <span class="q">si … llavors</span>. Al seu forat, <span class="cat sensing">Sensors</span> <span class="q">tocant … ?</span> i, al desplegable, tria <span class="q">Professor</span>.</li>
+        <li data-i18n="pas3.9">Dins d'aquest <span class="q">si</span>: <span class="cat variables">Variables</span> <span class="q">augmenta … en 1</span> (tria <span class="q">Punts</span>), <span class="cat sound">So</span> <span class="q">inicia el so</span> (tria <span class="q">recull</span>) i una còpia del <span class="q">ves a x: y: 130</span> (clic dret &rarr; Duplica).</li>
+      </ol>
+      <div class="tip" data-i18n="pas3.10"><strong>Una variable</strong> és una caixa amb nom on el joc guarda un número. Aquí guarda els punts.</div>
+      <details>
+        <summary data-i18n="pas3.11">Si no et funciona</summary>
+        <ul>
+          <li data-i18n="pas3.12">Al desplegable de <span class="q">tocant</span> ha de posar <span class="q">Professor</span>, no <span class="q">punter del ratolí</span>.</li>
+          <li data-i18n="pas3.13">No sents el so? Mira que tens el volum de l'ordinador pujat.</li>
+          <li data-i18n="pas3.14">Els punts no es posen a zero? Falta el bloc <span class="q">assigna a Punts el valor 0</span>.</li>
+        </ul>
+      </details>
+    </div>
+    <div class="col-right">
+      <div class="code-box"><p class="cap" data-i18n="pas3.15">El teu programa del Paper <span class="new-tag">NOU</span> = el que afegeixes ara</p><div data-script="paper3"></div></div>
+      <div>
+        <div data-stage="step3"></div>
+        <p class="stage-cap" data-i18n="pas3.16">Resultat esperat: en agafar el paper, el marcador puja un punt.</p>
+      </div>
+      <div class="check">
+        <h3 data-i18n="pas3.17">Comprova</h3>
+        <p data-i18n="pas3.18">Agafa un paper amb el professor. Sona el so i el marcador puja?</p>
+        <button class="btn" type="button" data-done="3" aria-pressed="false">Ho tinc</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PAS 4 ================= -->
+<section class="panel" id="pas4">
+  <div class="panel-head">
+    <div class="badge">4</div>
+    <div>
+      <h2 data-i18n="pas4.1">Perill: cau un maó</h2>
+      <p class="concept" data-i18n="pas4.2">Condicions, canvi de pantalla i final de partida</p>
+    </div>
+  </div>
+  <div class="panel-body">
+    <p class="goal" data-i18n="pas4.3">Objectiu: si un maó toca el professor, el joc s'acaba i surt la pantalla final.</p>
+    <div>
+      <div class="sprite-pick" data-i18n="pas4.4"><img src="mao.png" alt="">Selecciona: Maó</div><span class="role" data-i18n="pas4.18">Canvieu: A llegeix · B fa els blocs</span>
+      <h3 data-i18n="pas4.5">Què has de fer</h3>
+      <ol class="do">
+        <li data-i18n="pas4.6"><span class="cat events">Esdeveniments</span> <span class="q">quan la bandera es cliqui</span>, i sota <span class="cat motion">Moviment</span> <span class="q">ves a x: y:</span>: <span class="q">130</span> a la y i, a la x, <span class="cat operators">Operadors</span> <span class="q">nombre a l'atzar entre 1 i 10</span> amb <span class="q">-200</span> i <span class="q">200</span>, igual que al Paper. Així el maó torna a dalt de seguida.</li>
+        <li data-i18n="pas4.7">Afegeix <span class="cat control">Control</span> <span class="q">espera 1 segons</span> i canvia l'1 per <span class="q">3</span>. Així el primer maó triga a caure.</li>
+        <li data-i18n="pas4.8">Afegeix <span class="cat control">Control</span> <span class="q">per sempre</span> i, a dins, <span class="cat motion">Moviment</span> <span class="q">suma 10 a y</span> amb <span class="q">-4</span> en lloc del 10.</li>
+        <li data-i18n="pas4.9">Dins, un <span class="cat control">Control</span> <span class="q">si … llavors</span> amb <span class="cat sensing">Sensors</span> <span class="q">tocant Professor?</span>. A dins hi van tres blocs: <span class="cat sound">So</span> <span class="q">inicia el so ai</span>, <span class="cat looks">Aspecte</span> <span class="q">canvia el fons a fi</span> i <span class="cat control">Control</span> <span class="q">atura tot</span>.</li>
+        <li data-i18n="pas4.10">Sota, el mateix que al Paper: <span class="cat control">Control</span> <span class="q">si … llavors</span> amb <span class="cat operators">Operadors</span> <span class="q">… &lt; …</span>, <span class="cat motion">Moviment</span> <span class="q">posició y</span> al primer forat i <span class="q">-150</span> al segon, i a dins una còpia del <span class="q">ves a x: y: 130</span>. Així el maó torna a caure.</li>
+        <li data-i18n="pas4.11">Torna al <span class="sprite-pick" style="margin:0;padding:2px 8px 2px 4px"><img src="professor.png" alt="" style="height:24px">Professor</span> i afegeix <span class="cat looks">Aspecte</span> <span class="q">canvia el fons a</span> (tria <span class="q">carrer</span>) just sota <span class="q">quan la bandera es cliqui</span>. Així la partida nova comença al carrer.</li>
+      </ol>
+      <div class="tip" data-i18n="pas4.12"><strong>Truc ràpid:</strong> arrossega el programa del Paper a sobre de la miniatura del Maó. Se'n fa una còpia. Després treu-hi els blocs dels punts i canvia el que cal.</div>
+    </div>
+    <div class="col-right">
+      <div class="code-box"><p class="cap" data-i18n="pas4.13">El programa del Maó</p><div data-script="mao4"></div></div>
+      <div class="code-box"><p class="cap" data-i18n="pas4.14">Al Professor, afegeix aquest bloc</p><div data-script="prof4"></div></div>
+      <div>
+        <div class="result-pair" data-stage="step4"></div>
+        <p class="stage-cap" data-i18n="pas4.15">Resultat esperat: el maó toca el professor i surt la pantalla final.</p>
+      </div>
+      <div class="check">
+        <h3 data-i18n="pas4.16">Comprova</h3>
+        <p data-i18n="pas4.17">Deixa que et caigui un maó. Sona l'«ai» i surt «Fi del joc»? Clica la bandera verda: torna a començar al carrer?</p>
+        <button class="btn" type="button" data-done="4" aria-pressed="false">Ho tinc</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PAS 5 ================= -->
+<section class="panel" id="pas5">
+  <div class="panel-head">
+    <div class="badge">5</div>
+    <div>
+      <h2 data-i18n="pas5.1">Cada cop més difícil</h2>
+      <p class="concept" data-i18n="pas5.2">Operacions amb variables (si en queda temps)</p>
+    </div>
+  </div>
+  <div class="panel-body">
+    <p class="goal" data-i18n="pas5.3">Objectiu: que el paper caigui més de pressa a mesura que sumes punts.</p>
+    <div>
+      <div class="sprite-pick" data-i18n="pas5.4"><img src="paper.png" alt="">Selecciona: Paper</div><span class="role" data-i18n="pas5.24">Canvieu: B llegeix · A fa els blocs</span>
+      <h3 data-i18n="pas5.5">Què has de fer</h3>
+      <ol class="do">
+        <li data-i18n="pas5.6"><span class="cat operators">Operadors</span> Arrossega un bloc <span class="q">… - …</span> al forat del <span class="q">suma -3 a y</span>.</li>
+        <li data-i18n="pas5.7">Al primer forat de la resta, escriu <span class="q">-3</span>.</li>
+        <li data-i18n="pas5.8"><span class="cat operators">Operadors</span> Al segon forat, posa un bloc <span class="q">… / …</span> (divisió).</li>
+        <li data-i18n="pas5.9"><span class="cat variables">Variables</span> Arrossega <span class="q">Punts</span> al primer forat de la divisió i escriu <span class="q">5</span> al segon.</li>
+      </ol>
+      <p style="margin:14px 0 0" data-i18n="pas5.10">Ara el paper baixa <span class="q">3 + Punts ÷ 5</span> passos cada vegada. Com més punts, més ràpid.</p>
+      <div class="scroll-x" style="margin-top:12px">
+        <table class="t">
+          <thead><tr><th data-i18n="pas5.11">Punts</th><th data-i18n="pas5.12">Passos que baixa</th></tr></thead>
+          <tbody>
+            <tr><td data-i18n="pas5.13">0</td><td data-i18n="pas5.14">3</td></tr>
+            <tr><td data-i18n="pas5.15">10</td><td data-i18n="pas5.16">5</td></tr>
+            <tr><td data-i18n="pas5.17">25</td><td data-i18n="pas5.18">8</td></tr>
+            <tr><td data-i18n="pas5.19">50</td><td data-i18n="pas5.20">13</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-right">
+      <div class="code-box"><p class="cap" data-i18n="pas5.21">El bloc de moviment del Paper, ara amb operacions</p><div data-script="paper5"></div></div>
+      <div class="check">
+        <h3 data-i18n="pas5.22">Comprova</h3>
+        <p data-i18n="pas5.23">Juga un parell de minuts. Notes que al principi és tranquil i després s'accelera?</p>
+        <button class="btn" type="button" data-done="5" aria-pressed="false">Ho tinc</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= REPTES ================= -->
+<section class="panel" id="reptes">
+  <div class="panel-head">
+    <div class="badge" style="font-size:14px">+</div>
+    <div>
+      <h2 data-i18n="reptes.1">Fes-lo teu</h2>
+      <p class="concept" data-i18n="reptes.2">Reptes per als que acabin abans</p>
+    </div>
+  </div>
+  <div class="challenges">
+    <div class="challenge"><span class="lvl" data-i18n="reptes.3">FÀCIL</span><h4 data-i18n="reptes.4">Dibuixa el teu professor</h4><p data-i18n="reptes.5">Selecciona el Professor, obre <span class="q">Disfresses</span> i canvia-li la cara, la camisa o la calba.</p></div>
+    <div class="challenge"><span class="lvl" data-i18n="reptes.6">FÀCIL</span><h4 data-i18n="reptes.7">Canvia la música</h4><p data-i18n="reptes.8">Clica l'<span class="q">Escenari</span> (a la dreta, al costat dels personatges), obre <span class="q">Sons</span> i tria'n un de nou de la biblioteca. Al programa de l'Escenari, canvia <span class="q">musica</span> pel teu.</p></div>
+    <div class="challenge"><span class="lvl" data-i18n="reptes.9">MITJÀ</span><h4 data-i18n="reptes.10">Dos maons</h4><p data-i18n="reptes.11">Clic dret al Maó &rarr; <span class="q">Duplica</span>. Canvia l'espera inicial perquè no caiguin alhora.</p></div>
+    <div class="challenge"><span class="lvl" data-i18n="reptes.12">MITJÀ</span><h4 data-i18n="reptes.13">Paper daurat</h4><p data-i18n="reptes.14">Duplica el Paper, pinta'l de groc i fes que valgui 5 punts: <span class="q">augmenta Punts en 5</span>.</p></div>
+    <div class="challenge"><span class="lvl" data-i18n="reptes.15">DIFÍCIL</span><h4 data-i18n="reptes.16">Tres vides</h4><p data-i18n="reptes.17">Crea la variable <span class="q">Vides</span> amb valor 3. Cada maó en resta una. Quan arribi a 0, s'acaba el joc.</p></div>
+    <div class="challenge"><span class="lvl" data-i18n="reptes.18">FINAL</span><h4 data-i18n="reptes.19">Desa i comparteix</h4><p data-i18n="reptes.20">Menú <span class="q">Fitxer</span> &rarr; <span class="q">Desa al teu ordinador</span> i puja el fitxer al Classroom.</p></div>
+  </div>
+</section>
+
+<!-- ================= RESUM ================= -->
+<section class="panel" id="resum">
+  <div class="panel-head">
+    <div class="badge" style="font-size:14px">★</div>
+    <div>
+      <h2 data-i18n="resum.1">Què has après</h2>
+      <p class="concept" data-i18n="resum.2">Els mateixos conceptes que fa servir qualsevol videojoc o producte multimèdia interactiu</p>
+    </div>
+  </div>
+  <div class="pad">
+    <div class="scroll-x">
+      <table class="t">
+        <thead><tr><th data-i18n="resum.3">Concepte</th><th data-i18n="resum.4">Què és</th><th data-i18n="resum.5">On l'has fet servir</th></tr></thead>
+        <tbody>
+          <tr><td data-i18n="resum.6">Esdeveniment</td><td data-i18n="resum.7">Alguna cosa passa i el programa respon.</td><td data-i18n="resum.8">La bandera verda i les fletxes del teclat.</td></tr>
+          <tr><td data-i18n="resum.9">Bucle</td><td data-i18n="resum.10">Repetir accions sense parar.</td><td data-i18n="resum.11">«per sempre» fa caure papers i maons.</td></tr>
+          <tr><td data-i18n="resum.12">Condició</td><td data-i18n="resum.13">Decidir segons el que passa.</td><td data-i18n="resum.14">«si toca el professor». «si ha arribat a baix».</td></tr>
+          <tr><td data-i18n="resum.15">Variable</td><td data-i18n="resum.16">Una caixa amb nom que guarda un valor.</td><td data-i18n="resum.17">Els punts.</td></tr>
+          <tr><td data-i18n="resum.18">Operació</td><td data-i18n="resum.19">Fer càlculs amb els valors.</td><td data-i18n="resum.20">El número a l'atzar i la velocitat que creix.</td></tr>
+          <tr><td data-i18n="resum.21">Canvi de pantalla</td><td data-i18n="resum.22">Passar d'una escena a una altra.</td><td data-i18n="resum.23">De «carrer» a «fi».</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:18px" data-i18n="resum.24">A l'aula, això es pot portar a qualsevol matèria. Els papers poden ser paraules, dates o respostes correctes, i els maons les incorrectes.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p data-i18n="peu.1">Sessió de formació simulada del certificat de professionalitat IMSV0209, mòdul MF0945_3 (unitats UF1247, UF1248 i UF1249).</p>
+    <p data-i18n="peu.2">El joc es fa amb <a href="https://scratch.mit.edu/" target="_blank" rel="noopener">Scratch</a>, un projecte del Lifelong Kindergarten Group del MIT Media Lab. Els gràfics i els sons d'aquest joc són originals.</p>
+  </div>
+</footer>
+
+<script src="base.js"></script>
+<script src="sprites.js"></script>
+<script src="i18n-es.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  /* ===== idioma: català (el text de l'HTML) o castellà (i18n-es.js) ===== */
+  var LANG_KEY = 'recull-papers-idioma';
+  var lang = 'ca';
+  try { lang = localStorage.getItem(LANG_KEY) || 'ca'; } catch(e){}
+  var qs = /[?&]lang=(ca|es)/.exec(location.search); if(qs) lang = qs[1];
+  if(lang !== 'es') lang = 'ca';
+  var T = {
+    ca:{done:'Fet ✔', todo:'Ho tinc', progress:' de 6 fets', nav:"Passos de l'activitat",
+        hero:"El joc acabat: un professor calb recull papers que cauen de les finestres d'un carrer amb acadèmies",
+        map:"Esquema de l'editor de Scratch amb quatre zones numerades",
+        dlSaved:'Desat. Descomprimeix el .zip (clic dret → Extreu-ho tot) i carrega a Scratch el fitxer projecte-base.sb3.',
+        dlDeclined:"No s'ha desat. Torna a provar-ho quan vulguis.", dlFail:"No s'ha pogut desar. Agafa el fitxer del Classroom.",
+        dlBtn:'Descarrega projecte-base.zip',
+        s1:'El professor al mig i dues còpies tènues a esquerra i dreta, com si es mogués', s2:'Un paper que cau en tres posicions successives',
+        s3:'El professor agafa un paper i el marcador de punts diu 3', s4a:'Un maó cau sobre el professor', s4b:'Pantalla final: Fi del joc'},
+    es:{done:'Hecho ✔', todo:'Lo tengo', progress:' de 6 hechos', nav:'Pasos de la actividad',
+        hero:'El juego acabado: un profesor calvo recoge papeles que caen de las ventanas de una calle con academias',
+        map:'Esquema del editor de Scratch con cuatro zonas numeradas',
+        dlSaved:'Guardado. Descomprime el .zip (clic derecho → Extraer todo) y carga en Scratch el archivo projecte-base.sb3.',
+        dlDeclined:'No se ha guardado. Vuelve a probarlo cuando quieras.', dlFail:'No se ha podido guardar. Coge el archivo del Classroom.',
+        dlBtn:'Descarga projecte-base.zip',
+        s1:'El profesor en el centro y dos copias tenues a izquierda y derecha, como si se moviera', s2:'Un papel que cae en tres posiciones sucesivas',
+        s3:'El profesor coge un papel y el marcador de puntos dice 3', s4a:'Un ladrillo cae sobre el profesor', s4b:'Pantalla final: Fi del joc'}
+  };
+  /* etiquetes oficials dels blocs de Scratch en cada idioma */
+  var B = {
+    ca:{flag:['quan la','es cliqui'], go:['ves a x:','y:'], forever:'per sempre', ifA:'si', ifB:'llavors', key:['tecla','premuda?'],
+        right:'fletxa dreta', left:'fletxa esquerra', change:['suma','a x','a y'], rnd:["nombre a l'atzar entre",'i'], ypos:'posició y',
+        touch:['tocant','?'], set:['assigna a','el valor'], inc:function(v,n){return ['augmenta',v,'en',n];}, sound:'inicia el so',
+        wait:['espera','segons'], bg:'canvia el fons a', stop:'atura', all:'tot',
+        g4:'… el bucle «per sempre» continua igual …', g5:'… dins del bucle «per sempre» …'},
+    es:{flag:['al hacer clic en',''], go:['ir a x:','y:'], forever:'por siempre', ifA:'si', ifB:'entonces', key:['¿tecla','presionada?'],
+        right:'flecha derecha', left:'flecha izquierda', change:['sumar','a x','a y'], rnd:['número aleatorio entre','y'], ypos:'posición en y',
+        touch:['¿tocando','?'], set:['dar a','el valor'], inc:function(v,n){return ['sumar a',v,n];}, sound:'iniciar sonido',
+        wait:['esperar','segundos'], bg:'cambiar fondo a', stop:'detener', all:'todos',
+        g4:'… el bucle «por siempre» sigue igual …', g5:'… dentro del bucle «por siempre» …'}
+  };
+
+  /* ===== generador de blocs de Scratch ===== */
+  var FLAG = '<svg class="flag" viewBox="0 0 16 16" aria-label="bandera verda"><path d="M3 1.5v13" stroke="#2f7f37" stroke-width="2" fill="none"/><path d="M3.5 2.5c3-1.8 5 1.4 9 0v6.5c-4 1.4-6-1.8-9 0z" fill="#4cbf56" stroke="#2f7f37" stroke-width="1.2"/></svg>';
+  var j = function(a){ return a.join(' '); };
+  var inp = function(v){ return '<span class="in">'+v+'</span>'; };
+  var dd  = function(v){ return '<span class="dd">'+v+' ▾</span>'; };
+  var rep = function(c,p){ return '<span class="rep '+c+'">'+j(p)+'</span>'; };
+  var bool = function(c,p){ return '<span class="bool '+c+'">'+j(p)+'</span>'; };
+  var blk = function(c,p,o){ o=o||{}; return '<div class="blk '+c+(o.hat?' hat':'')+(o.n?' new':'')+'">'+j(p)+'</div>'; };
+  var cblk = function(c,p,inner,o){ o=o||{}; return '<div class="cblk '+c+(o.n?' new':'')+'"><div class="blk ctop">'+j(p)+'</div><div class="arm">'+inner+'</div><div class="blk cbot"></div></div>'; };
+  var stack = function(){ return '<div class="stack">'+Array.prototype.join.call(arguments,'')+'</div>'; };
+  var ghost = function(t){ return '<div class="ghost">'+t+'</div>'; };
+
+  var L = B[lang];
+  var whenFlag = function(n){ return blk('events',[L.flag[0],FLAG,L.flag[1]],{hat:1,n:n}); };
+  var rnd = function(){ return rep('operators',[L.rnd[0],inp('-200'),L.rnd[1],inp('200')]); };
+  var gotoXY = function(x,y,n){ return blk('motion',[L.go[0],x,L.go[1],y],{n:n}); };
+  var ypos = function(){ return rep('motion',[L.ypos]); };
+  var tocaProf = function(){ return bool('sensing',[L.touch[0],dd('Professor'),L.touch[1]]); };
+  var yBaix = function(){ return bool('operators',[ypos(),'&lt;',inp('-150')]); };
+  var ifBlk = function(cond,inner,n){ return cblk('control',[L.ifA,cond,L.ifB],inner,{n:n}); };
+  var forever = function(inner){ return cblk('control',[L.forever],inner); };
+  var respawn = function(){ return gotoXY(rnd(),inp('130')); };
+  var change = function(v,axis,n){ return blk('motion',[L.change[0],v,axis==='x'?L.change[1]:L.change[2]],{n:n}); };
+  var keyIf = function(k,v){ return ifBlk(bool('sensing',[L.key[0],dd(k),L.key[1]]), stack(change(inp(v),'x'))); };
+
+  function buildScripts(){
+    return {
+      prof1: stack(
+        whenFlag(), gotoXY(inp('0'),inp('-110')),
+        forever(stack(keyIf(L.right,'8'), keyIf(L.left,'-8')))
+      ),
+      paper2: stack(
+        whenFlag(), respawn(),
+        forever(stack(
+          change(inp('-3'),'y'),
+          ifBlk(yBaix(), stack(respawn()))
+        ))
+      ),
+      paper3: stack(
+        whenFlag(),
+        blk('variables',[L.set[0],dd('Punts'),L.set[1],inp('0')],{n:1}),
+        respawn(),
+        forever(stack(
+          change(inp('-3'),'y'),
+          ifBlk(tocaProf(), stack(
+            blk('variables',L.inc(dd('Punts'),inp('1'))),
+            blk('sound',[L.sound,dd('recull')]),
+            respawn()
+          ), 1),
+          ifBlk(yBaix(), stack(respawn()))
+        ))
+      ),
+      mao4: stack(
+        whenFlag(), respawn(),
+        blk('control',[L.wait[0],inp('3'),L.wait[1]]),
+        forever(stack(
+          change(inp('-4'),'y'),
+          ifBlk(tocaProf(), stack(
+            blk('sound',[L.sound,dd('ai')]),
+            blk('looks',[L.bg,dd('fi')]),
+            blk('control',[L.stop,dd(L.all)])
+          )),
+          ifBlk(yBaix(), stack(respawn()))
+        ))
+      ),
+      prof4: stack(
+        whenFlag(),
+        blk('looks',[L.bg,dd('carrer')],{n:1}),
+        gotoXY(inp('0'),inp('-110')),
+        ghost(L.g4)
+      ),
+      paper5: stack(
+        ghost(L.g5),
+        change(rep('operators',[inp('-3'),'-',rep('operators',[rep('variables',['Punts']),'/',inp('5')])]),'y',1)
+      )
+    };
+  }
+
+  /* ===== miniatures de l'escenari (coordenades de Scratch: x -240..240, y -180..180) ===== */
+  var W = window.SPRITE_W || {prof:15, paper:7.5, brick:12.5};
+  var IMG = {prof:['professor.png',W.prof,'Professor'], paper:['paper.png',W.paper,'Paper'], brick:['mao.png',W.brick,'Maó']};
+  function it(k,x,y,o){
+    o=o||{}; var d=IMG[k];
+    return '<img class="it" src="'+d[0]+'" alt="'+(o.alt===undefined?'':o.alt)+'" style="left:'+((x+240)/4.8)+'%;top:'+((180-y)/3.6)+'%;width:'+d[1]+'%;opacity:'+(o.o==null?1:o.o)+'">';
+  }
+  function lbl(t,x,y){ return '<span class="lbl" style="left:'+((x+240)/4.8)+'%;top:'+((180-y)/3.6)+'%">'+t+'</span>'; }
+  function monitor(v){ return '<div class="monitor">Punts <b>'+v+'</b></div>'; }
+  function stageHtml(bg,inner,label){
+    return '<div class="stage" style="background-image:url('+bg+')" role="img" aria-label="'+label+'">'+inner+'</div>';
+  }
+  var stages = {
+    step1: function(t){ return stageHtml('fons-carrer.png',
+      it('prof',-140,-110,{o:.35})+it('prof',140,-110,{o:.35})+it('prof',0,-110)+lbl('&#9664;',-75,-110)+lbl('&#9654;',75,-110), t.s1); },
+    step2: function(t){ return stageHtml('fons-carrer.png',
+      it('paper',-70,125,{o:.3})+it('paper',-70,45,{o:.55})+it('paper',-70,-35,{o:1})+lbl('&#9660;',-70,-90)+it('prof',70,-110), t.s2); },
+    step3: function(t){ return stageHtml('fons-carrer.png',
+      monitor(3)+it('prof',0,-110)+it('paper',0,-72)+lbl('+1',45,-50), t.s3); },
+    step4: function(t){
+      return stageHtml('fons-carrer.png', monitor(7)+it('brick',0,45,{o:.35})+it('brick',0,-25,{o:.6})+it('prof',0,-110)+it('brick',0,-85), t.s4a)
+           + stageHtml('fons-final.png', it('prof',0,-110)+it('brick',0,-85), t.s4b); }
+  };
+  var hs = document.getElementById('hero-stage');
+  hs.style.backgroundImage = 'url('+hs.getAttribute('data-bg')+')';
+  hs.innerHTML = monitor(12)+it('paper',-150,95,{o:.9})+it('paper',90,20)+it('paper',165,125,{o:.9})+it('brick',-30,100)+it('prof',20,-110);
+
+  /* ===== progrés (només a aquest navegador) ===== */
+  var KEY = 'recull-papers-progres';
+  var done = {};
+  try { done = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch(e){ done = {}; }
+  function paint(){
+    var n = 0, t = T[lang];
+    document.querySelectorAll('[data-done]').forEach(function(b){
+      var k = b.getAttribute('data-done'), on = !!done[k];
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      b.textContent = on ? t.done : t.todo;
+      if(on) n++;
+    });
+    document.querySelectorAll('nav.steps a[data-step]').forEach(function(a){
+      a.classList.toggle('done', !!done[a.getAttribute('data-step')]);
+    });
+    document.getElementById('progress').textContent = n + t.progress;
+  }
+  document.querySelectorAll('[data-done]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var k = b.getAttribute('data-done');
+      done[k] = !done[k];
+      try { localStorage.setItem(KEY, JSON.stringify(done)); } catch(e){}
+      paint();
+    });
+  });
+
+  /* ===== aplicar l'idioma ===== */
+  var CA = {};
+  document.querySelectorAll('[data-i18n]').forEach(function(el){ CA[el.getAttribute('data-i18n')] = el.innerHTML; });
+  function applyLang(l){
+    lang = l; L = B[l];
+    var t = T[l], es = window.I18N_ES || {};
+    document.documentElement.lang = l;
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var k = el.getAttribute('data-i18n');
+      el.innerHTML = (l === 'es' && es[k] != null) ? es[k] : CA[k];
+    });
+    var sc = buildScripts();
+    document.querySelectorAll('[data-script]').forEach(function(el){ el.innerHTML = sc[el.getAttribute('data-script')] || ''; });
+    document.querySelectorAll('[data-stage]').forEach(function(el){
+      var f = stages[el.getAttribute('data-stage')];
+      if(f) el.innerHTML = f(t);
+    });
+    hs.setAttribute('aria-label', t.hero);
+    document.querySelector('nav.steps').setAttribute('aria-label', t.nav);
+    document.querySelector('.ui-map').setAttribute('aria-label', t.map);
+    document.getElementById('dl').textContent = t.dlBtn;
+    document.getElementById('dl-note').textContent = '';
+    document.querySelectorAll('.langs button').forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-lang') === l ? 'true' : 'false'); });
+    try { localStorage.setItem(LANG_KEY, l); } catch(e){}
+    paint();
+  }
+  document.querySelectorAll('.langs button').forEach(function(b){
+    b.addEventListener('click', function(){ applyLang(b.getAttribute('data-lang')); });
+  });
+  applyLang(lang);
+
+  /* ===== descàrrega del projecte base ===== */
+  var btn = document.getElementById('dl'), note = document.getElementById('dl-note'), fb = document.getElementById('dl-fallback');
+  function toBytes(b64){ var s = atob(b64), u = new Uint8Array(s.length); for(var i=0;i<s.length;i++){ u[i]=s.charCodeAt(i); } return u; }
+  if(typeof claude !== 'undefined' && claude && claude.use && window.BASE_ZIP_B64){
+    claude.use('downloads').then(function(dl){
+      if(!dl) return;
+      btn.hidden = false; fb.hidden = true;
+      btn.addEventListener('click', function(){
+        note.hidden = false; note.textContent = '';
+        dl.save({filename:'projecte-base.zip', data: toBytes(window.BASE_ZIP_B64)}).then(function(){
+          note.textContent = T[lang].dlSaved;
+        }).catch(function(e){
+          note.textContent = (e && e.code === 'declined') ? T[lang].dlDeclined : T[lang].dlFail;
+        });
+      });
+    }).catch(function(){});
+  } else if(window.BASE_ZIP_B64){
+    /* web pública (fora de claude.ai): descàrrega normal del navegador */
+    btn.hidden = false; fb.hidden = true;
+    btn.addEventListener('click', function(){
+      var url = URL.createObjectURL(new Blob([toBytes(window.BASE_ZIP_B64)], {type:'application/zip'}));
+      var a = document.createElement('a'); a.href = url; a.download = 'projecte-base.zip';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+      note.hidden = false; note.textContent = T[lang].dlSaved;
+    });
+  }
+})();
+</script>
+</body>
+</html>
