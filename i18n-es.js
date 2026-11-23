@@ -169,6 +169,13 @@ window.I18N_ES = {
  "resum.21": "Cambio de pantalla",
  "resum.22": "Pasar de una escena a otra.",
  "resum.23": "De «carrer» a «fi».",
+ "resum.25": "Contenido oficial (CP IMSV0209, MF0945_3)",
+ "resum.26": "UF1249: captación de eventos por parte del usuario. UF1248: elementos interactivos",
+ "resum.27": "UF1249: control de flujo (bucle). UF1247: rutas o guías de movimiento",
+ "resum.28": "UF1249: condiciones",
+ "resum.29": "UF1249: variables",
+ "resum.30": "UF1249: operaciones con variables",
+ "resum.31": "UF1247: generación de transiciones",
  "resum.24": "En el aula, esto se puede llevar a cualquier materia. Los papeles pueden ser palabras, fechas o respuestas correctas, y los ladrillos las incorrectas.",
 
  "peu.1": "Sesión de formación simulada del certificado de profesionalidad IMSV0209, módulo MF0945_3 (unidades UF1247, UF1248 y UF1249).",
