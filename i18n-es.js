@@ -179,6 +179,7 @@ window.I18N_ES = {
  "resum.31": "UF1247: generación de transiciones",
  "resum.24": "En el aula, esto se puede llevar a cualquier materia. Los papeles pueden ser palabras, fechas o respuestas correctas, y los ladrillos las incorrectas.",
 
+ "peu.3": "Práctica del curso de Docencia 2026, módulo MF1444 Impartición y tutorización de acciones formativas para el empleo, unidad formativa UF1645 Impartición de acciones formativas para el empleo. Creada por Abel Bascuñana. Docente: Javier Salinas.",
  "peu.1": "Sesión de formación simulada del certificado de profesionalidad IMSV0209, módulo MF0945_3 (unidades UF1247, UF1248 y UF1249).",
  "peu.2": "El juego se hace con <a href=\"https://scratch.mit.edu/\" target=\"_blank\" rel=\"noopener\">Scratch</a>, un proyecto del Lifelong Kindergarten Group del MIT Media Lab. Los gráficos y los sonidos de este juego son originales.",
  "pas0.18": "Trabajad en pareja: <span class=\"q\">A</span> lee las instrucciones en voz alta y <span class=\"q\">B</span> pone los bloques en Scratch. Cuando cambiéis de objeto, cambiad de papel.",
