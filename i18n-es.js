@@ -115,7 +115,7 @@ window.I18N_ES = {
  "pas5.3": "Objetivo: que el ladrillo caiga más deprisa a medida que sumas puntos.",
  "pas5.4": "<img src=\"mao.png\" alt=\"\">Selecciona: Maó",
  "pas5.5": "Qué tienes que hacer",
- "pas5.6": "<span class=\"cat operators\">Operadores</span> Arrastra un bloque <span class=\"q\">… - …</span> al hueco del <span class=\"q\">sumar -4 a y</span>.",
+ "pas5.6": "<span class=\"cat operators\">Operadores</span> Arrastra el bloque de restar, <span class=\"q\">… - …</span> (el que tiene el signo <strong>menos</strong> en medio), al hueco del <span class=\"q\">sumar -4 a y</span>, donde ahora está el -4.",
  "pas5.7": "En el primer hueco de la resta, escribe <span class=\"q\">-4</span>.",
  "pas5.8": "<span class=\"cat operators\">Operadores</span> En el segundo hueco, pon un bloque <span class=\"q\">… / …</span> (división).",
  "pas5.9": "<span class=\"cat variables\">Variables</span> Arrastra <span class=\"q\">Punts</span> al primer hueco de la división y escribe <span class=\"q\">5</span> en el segundo.",
