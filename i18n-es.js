@@ -59,7 +59,7 @@ window.I18N_ES = {
 
  "pas2.1": "Caen papeles de las ventanas",
  "pas2.2": "Movimiento continuo y posiciones al azar",
- "pas2.3": "Objetivo: que el papel salga de una ventana, caiga hasta abajo y vuelva a empezar.",
+ "pas2.3": "Objetivo: que el papel caiga desde la parte superior de la pantalla, llegue hasta abajo y vuelva a empezar.",
  "pas2.4": "<img src=\"paper.png\" alt=\"\">Selecciona: Paper",
  "pas2.5": "Qué tienes que hacer",
  "pas2.6": "<span class=\"cat events\">Eventos</span> <span class=\"q\">al hacer clic en la bandera</span>.",
