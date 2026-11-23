@@ -32,7 +32,7 @@ window.I18N_ES = {
  "pas0.12": "<strong>1 · Bloques:</strong> las piezas, ordenadas por colores.",
  "pas0.13": "<strong>2 · Zona de código:</strong> aquí arrastras y encajas los bloques.",
  "pas0.14": "<strong>3 · Escenario:</strong> donde se ve el juego. La bandera verde lo pone en marcha.",
- "pas0.15": "<strong>4 · Objetos:</strong> Professor, Paper y Maó (profesor, papel y ladrillo). Haz clic en uno para programarlo.",
+ "pas0.15": "<strong>4 · Objetos:</strong> Professor, Paper y Maó (profesor, papel y ladrillo). Haz clic en uno para editar su código.",
  "pas0.16": "Comprueba",
  "pas0.17": "¿Ves la calle con tres edificios, el profesor abajo y un papel y un ladrillo arriba?",
 
