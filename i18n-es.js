@@ -145,7 +145,7 @@ window.I18N_ES = {
  "reptes.17": "Crea la variable <span class=\"q\">Vides</span> con valor 3. Cada ladrillo resta una. Cuando llegue a 0, se acaba el juego.",
  "reptes.18": "FINAL",
  "reptes.19": "Guarda y comparte",
- "reptes.20": "Menú <span class=\"q\">Archivo</span> &rarr; <span class=\"q\">Guardar en tu ordenador</span> y sube el archivo al Classroom.",
+ "reptes.20": "Menú <span class=\"q\">Archivo</span> &rarr; <span class=\"q\">Guardar en tu ordenador</span>. Después súbelo a Google Drive y compártelo con tu compañero de grupo.",
 
  "resum.1": "Qué has aprendido",
  "resum.2": "Los mismos conceptos que usa cualquier videojuego o producto multimedia interactivo",
