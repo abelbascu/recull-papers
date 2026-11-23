@@ -7,6 +7,8 @@ window.I18N_ES = {
  "hero.4": "Tú programarás el juego, paso a paso, con Scratch. No hace falta saber programar.",
  "hero.5": "5 pasos",
  "hero.6": "Sin instalar nada",
+ "hero.9": "Materiales de la clase:",
+ "hero.10": "abre el Classroom",
  "hero.7": "Sin código: arrastras bloques",
  "hero.8": "Así te quedará el juego cuando acabes.",
  "nav.1": "<span class=\"n\">0</span> Prepara",
