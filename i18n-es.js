@@ -130,7 +130,7 @@ window.I18N_ES = {
  "reptes.2": "Retos para quien acabe antes",
  "reptes.3": "FÁCIL",
  "reptes.4": "Dibuja a tu profesor",
- "reptes.5": "Selecciona el Professor, abre <span class=\"q\">Disfraces</span> y cámbiale la cara, la camisa o la calva.",
+ "reptes.5": "Selecciona el Professor, abre <span class=\"q\">Disfraces</span> y cámbiale la cara o la camisa.",
  "reptes.6": "FÁCIL",
  "reptes.7": "Cambia la música",
  "reptes.8": "Haz clic en el <span class=\"q\">Escenario</span> (a la derecha, al lado de los objetos), abre <span class=\"q\">Sonidos</span> y elige uno nuevo de la biblioteca. En el programa del Escenario, cambia <span class=\"q\">musica</span> por el tuyo.",
