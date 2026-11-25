@@ -1,7 +1,7 @@
 /* Textos en castellà de la web de passos. La clau és l'atribut data-i18n de index.html; el català és el text de l'HTML.
    Les etiquetes dels blocs de Scratch són les oficials de Scratch en castellà. Si falta una clau, es queda el català. */
 window.I18N_ES = {
- "hero.1": "VIDEOJUEGO EN 45 MINUTOS",
+ "hero.1": "VIDEOJUEGO EN 40 MINUTOS",
  "hero.2": "¡Recoge los papeles!",
  "hero.3": "El profesor Javier, de Lleida, quiere que los alumnos de su curso de docencia hagan las prácticas en las academias de la calle. Las que están de acuerdo le lanzan por la ventana el acuerdo de colaboración firmado. Recoge todos los papeles, pero cuidado: las academias que no quieren colaborar intentan asustarlo tirándole ladrillos.",
  "hero.4": "Tú programarás el juego, paso a paso, con Scratch. No hace falta saber programar.",
