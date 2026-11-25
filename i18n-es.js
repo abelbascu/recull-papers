@@ -24,6 +24,7 @@ window.I18N_ES = {
  "pas0.4": "Qué tienes que hacer",
  "pas0.5": "Abre <a href=\"https://scratch.mit.edu/projects/editor/\" target=\"_blank\" rel=\"noopener\">scratch.mit.edu/projects/editor</a>. No hace falta crear ninguna cuenta.",
  "pas0.6": "Cambia el idioma: arriba a la izquierda, haz clic en <span class=\"q\">Settings</span> (la rueda dentada) &rarr; <span class=\"q\">Language</span> y baja por la lista hasta <span class=\"q\">Español</span>. Si ya sale en castellano o en catalán, el menú se llama <span class=\"q\">Configuración</span> o <span class=\"q\">Configuració</span> &rarr; <span class=\"q\">Idioma</span>.",
+ "pas0.19": "Juguemos un poco con las instrucciones de Scratch. Con el gato que sale al abrir Scratch, haz clic en estos bloques sin encajarlos: <span class=\"cat motion\">Movimiento</span> <span class=\"q\">mover 10 pasos</span>, <span class=\"cat motion\">Movimiento</span> <span class=\"q\">girar 15 grados</span> y <span class=\"cat sound\">Sonido</span> <span class=\"q\">tocar sonido Miau</span>. Cada vez que haces clic en un bloque, el gato lo hace al momento. El profesor te lo enseña en la pantalla.",
  "pas0.7": "Menú <span class=\"q\">Archivo</span> &rarr; <span class=\"q\">Cargar desde tu ordenador</span> y elige el archivo <span class=\"q\">projecte-base.sb3</span>. Si sale un aviso, acepta.",
  "pas0.8": "Mira el esquema: tienes que reconocer las cuatro zonas de la pantalla.",
  "pas0.9": "<strong>¿Dónde está el archivo?</strong> En el Classroom, en el apartado de materiales. Si no lo ves, descárgalo aquí:",
