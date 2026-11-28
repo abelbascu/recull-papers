@@ -687,6 +687,10 @@ footer a{color:var(--yellow)}
   hs.style.backgroundImage = 'url('+hs.getAttribute('data-bg')+')';
   hs.innerHTML = monitor(12)+it('paper',-150,95,{o:.9})+it('paper',90,20)+it('paper',165,125,{o:.9})+it('brick',-30,100)+it('prof',20,-110);
 
+  /* ===== obrir sempre a dalt (usuari, 28/11/2026): el navegador recuperava la posició de l'última visita i amagava la capçalera ===== */
+  try { if('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch(e){}
+  if(!location.hash){ window.scrollTo(0, 0); window.addEventListener('load', function(){ window.scrollTo(0, 0); }); }
+
   /* ===== progrés (només a aquest navegador) ===== */
   var KEY = 'recull-papers-progres';
   var done = {};
