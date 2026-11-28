@@ -231,10 +231,10 @@ footer a{color:var(--yellow)}
       </ol>
       <div class="tip"><span data-i18n="pas0.9"><strong>On és el fitxer?</strong> Al Classroom, a l'apartat de materials. Si no el veus, descarrega'l aquí:</span>
         <div class="dl-row">
-          <button class="btn" id="dl" type="button" hidden>Descarrega projecte-base.zip</button>
+          <a class="btn" id="dl" href="projecte-base.sb3" download="projecte-base.sb3" style="display:inline-block;text-decoration:none">Descarrega projecte-base.sb3</a>
         </div>
         <p class="note" id="dl-note" hidden></p>
-        <p class="note" id="dl-fallback" data-i18n="pas0.10">Demana el fitxer al professor o agafa'l del Classroom.</p>
+        <p class="note" id="dl-fallback" data-i18n="pas0.10" hidden>Demana el fitxer al professor o agafa'l del Classroom.</p>
       </div>
     </div>
     <div class="col-right">
@@ -543,7 +543,6 @@ footer a{color:var(--yellow)}
   </div>
 </footer>
 
-<script src="base.js"></script>
 <script src="sprites.js"></script>
 <script src="i18n-es.js"></script>
 <script>
@@ -560,17 +559,17 @@ footer a{color:var(--yellow)}
     ca:{done:'Fet ✔', todo:'Ho tinc', progress:' de 6 fets', nav:"Passos de l'activitat",
         hero:"El joc acabat: un professor calb recull papers que cauen de les finestres d'un carrer amb acadèmies",
         map:"Esquema de l'editor de Scratch amb quatre zones numerades",
-        dlSaved:'Desat. Descomprimeix el .zip (clic dret → Extreu-ho tot) i carrega a Scratch el fitxer projecte-base.sb3.',
+        dlSaved:'Es desa a la carpeta Baixades. Carrega-ho a Scratch: Fitxer → Carrega des del teu ordinador.',
         dlDeclined:"No s'ha desat. Torna a provar-ho quan vulguis.", dlFail:"No s'ha pogut desar. Agafa el fitxer del Classroom.",
-        dlBtn:'Descarrega projecte-base.zip',
+        dlBtn:'Descarrega projecte-base.sb3',
         s1:'El professor al mig i dues còpies tènues a esquerra i dreta, com si es mogués', s2:'Un paper que cau en tres posicions successives',
         s3:'El professor agafa un paper i el marcador de punts diu 3', s4a:'Un maó cau sobre el professor', s4b:'Pantalla final: Fi del joc'},
     es:{done:'Hecho ✔', todo:'Lo tengo', progress:' de 6 hechos', nav:'Pasos de la actividad',
         hero:'El juego acabado: un profesor calvo recoge papeles que caen de las ventanas de una calle con academias',
         map:'Esquema del editor de Scratch con cuatro zonas numeradas',
-        dlSaved:'Guardado. Descomprime el .zip (clic derecho → Extraer todo) y carga en Scratch el archivo projecte-base.sb3.',
+        dlSaved:'Se guarda en la carpeta Descargas. Cárgalo en Scratch: Archivo → Cargar desde tu ordenador.',
         dlDeclined:'No se ha guardado. Vuelve a probarlo cuando quieras.', dlFail:'No se ha podido guardar. Coge el archivo del Classroom.',
-        dlBtn:'Descarga projecte-base.zip',
+        dlBtn:'Descarga projecte-base.sb3',
         s1:'El profesor en el centro y dos copias tenues a izquierda y derecha, como si se moviera', s2:'Un papel que cae en tres posiciones sucesivas',
         s3:'El profesor coge un papel y el marcador de puntos dice 3', s4a:'Un ladrillo cae sobre el profesor', s4b:'Pantalla final: Fi del joc'}
   };
@@ -758,33 +757,9 @@ footer a{color:var(--yellow)}
   });
   applyLang(lang);
 
-  /* ===== descàrrega del projecte base ===== */
-  var btn = document.getElementById('dl'), note = document.getElementById('dl-note'), fb = document.getElementById('dl-fallback');
-  function toBytes(b64){ var s = atob(b64), u = new Uint8Array(s.length); for(var i=0;i<s.length;i++){ u[i]=s.charCodeAt(i); } return u; }
-  if(typeof claude !== 'undefined' && claude && claude.use && window.BASE_ZIP_B64){
-    claude.use('downloads').then(function(dl){
-      if(!dl) return;
-      btn.hidden = false; fb.hidden = true;
-      btn.addEventListener('click', function(){
-        note.hidden = false; note.textContent = '';
-        dl.save({filename:'projecte-base.zip', data: toBytes(window.BASE_ZIP_B64)}).then(function(){
-          note.textContent = T[lang].dlSaved;
-        }).catch(function(e){
-          note.textContent = (e && e.code === 'declined') ? T[lang].dlDeclined : T[lang].dlFail;
-        });
-      });
-    }).catch(function(){});
-  } else if(window.BASE_ZIP_B64){
-    /* web pública (fora de claude.ai): descàrrega normal del navegador */
-    btn.hidden = false; fb.hidden = true;
-    btn.addEventListener('click', function(){
-      var url = URL.createObjectURL(new Blob([toBytes(window.BASE_ZIP_B64)], {type:'application/zip'}));
-      var a = document.createElement('a'); a.href = url; a.download = 'projecte-base.zip';
-      document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
-      note.hidden = false; note.textContent = T[lang].dlSaved;
-    });
-  }
+  /* ===== descàrrega del projecte base: un enllaç normal al fitxer .sb3 (sense zip) ===== */
+  var btn = document.getElementById('dl'), note = document.getElementById('dl-note');
+  btn.addEventListener('click', function(){ note.hidden = false; note.textContent = T[lang].dlSaved; });
 })();
 </script>
 </body>
