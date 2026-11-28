@@ -689,7 +689,17 @@ footer a{color:var(--yellow)}
 
   /* ===== obrir sempre a dalt (usuari, 28/11/2026): el navegador recuperava la posició de l'última visita i amagava la capçalera ===== */
   try { if('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch(e){}
-  if(!location.hash){ window.scrollTo(0, 0); window.addEventListener('load', function(){ window.scrollTo(0, 0); }); }
+  // També si l'adreça porta #pasN (p. ex. l'enllaç del Classroom copiat després de clicar un pas): s'obre a dalt i el # es treu.
+  if(location.hash){ try { history.replaceState(null, '', location.pathname + location.search); } catch(e){} }
+  window.scrollTo(0, 0);
+  window.addEventListener('load', function(){ window.scrollTo(0, 0); });
+  // La barra de passos fa scroll fins al pas sense posar #pasN a l'adreça, perquè l'adreça copiada no el porti.
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(ev){
+      var t = document.getElementById(a.getAttribute('href').slice(1));
+      if(t){ ev.preventDefault(); t.scrollIntoView({behavior:'smooth'}); }
+    });
+  });
 
   /* ===== progrés (només a aquest navegador) ===== */
   var KEY = 'recull-papers-progres';
