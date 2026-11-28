@@ -50,6 +50,7 @@ window.I18N_ES = {
  "pas1.9": "<span class=\"cat control\">Control</span> Dentro del bucle, pon un <span class=\"q\">si … entonces</span>.",
  "pas1.10": "<span class=\"cat sensing\">Sensores</span> Arrastra <span class=\"q\">¿tecla … presionada?</span> al hueco del <span class=\"q\">si</span>. En el desplegable, elige <span class=\"q\">flecha derecha</span>.",
  "pas1.11": "<span class=\"cat motion\">Movimiento</span> Dentro del <span class=\"q\">si</span>, pon <span class=\"q\">sumar 10 a x</span> y cambia el 10 por <span class=\"q\">8</span>.",
+ "pas1.23": "<strong>¿Por qué «sumar a x» y no «mover pasos»?</strong> <span class=\"q\">sumar 8 a x</span> mueve el personaje siempre en horizontal: un número positivo lo lleva a la derecha y uno negativo, a la izquierda. <span class=\"q\">mover 8 pasos</span> lo mueve hacia donde mira, y habría que girarlo antes.",
  "pas1.12": "Clic derecho sobre el <span class=\"q\">si</span> &rarr; <span class=\"q\">Duplicar</span>. Encájalo debajo y cambia <span class=\"q\">flecha izquierda</span> y <span class=\"q\">-8</span>.",
  "pas1.13": "Si no te funciona",
  "pas1.14": "Comprueba que has seleccionado el Professor, no el Paper.",
